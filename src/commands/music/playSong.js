@@ -3,6 +3,21 @@ const { ApplicationCommandOptionType, MessageEmbed } = require('discord.js');
 const ytstream = require('yt-stream');
 const waitForStream = require('../../utils/waitForStream');
 
+ytstream.parseAudio = function(formats){
+    const audio = [];
+    var audioFormats = formats.filter(f => f.mimeType.startsWith('audio/webm; codecs="opus"'));
+    for(var i = 0; i < audioFormats.length; i++){
+        var format = audioFormats[i];
+        const type = format.mimeType;
+        if(type.startsWith('audio')){
+            format.codec = type.split('codecs=')[1].split('"')[0];
+            format.container = type.split('audio/')[1].split(';')[0];
+            audio.push(format);
+        }
+    }
+    return audio;
+}
+
 module.exports = {
     name: 'play',
     description: 'Plays the given link.',
@@ -43,6 +58,7 @@ module.exports = {
         // This is needed or it will play the link twice
         const results = await ytstream.search(songLink);
         songLink = results[0].url;
+        const songTitle = results[0].title;
 
         try {
         const stream = await ytstream.stream(songLink, {
@@ -67,6 +83,7 @@ module.exports = {
 
         audioPlayer.on(AudioPlayerStatus.Playing, () => {
             console.log(`Playing link: ${songLink}`);
+            console.log(`Song title: ${songTitle}`);
             interaction.reply({
                 content: "Playing Audio!",
             });
