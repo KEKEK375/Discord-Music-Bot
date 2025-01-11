@@ -69,7 +69,7 @@ module.exports = {
         });
 
         // DON'T REMOVE OR THE BOT WILL BREAK
-        await waitForStream(stream.stream);
+        await waitForStream(stream.stream, 10);
 
         const audioResource = createAudioResource(stream.stream, {
             inputType: 'webm/opus',

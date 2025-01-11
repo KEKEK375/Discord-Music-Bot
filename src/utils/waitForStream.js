@@ -1,5 +1,4 @@
-module.exports = async (stream) => {
-    let retries = 5;
+module.exports = async (stream, retries=5) => {
     while (retries > 0) {
         if (stream.readableLength > 0) {
             return;
