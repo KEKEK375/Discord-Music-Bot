@@ -1,6 +1,7 @@
 const { joinVoiceChannel, createAudioResource, createAudioPlayer, AudioPlayerStatus } = require('@discordjs/voice');
 const { ApplicationCommandOptionType, MessageEmbed } = require('discord.js');
 const ytstream = require('yt-stream');
+const waitForStream = require('../../utils/waitForStream');
 
 module.exports = {
     name: 'play',
@@ -52,7 +53,7 @@ module.exports = {
         });
 
         // DON'T REMOVE OR THE BOT WILL BREAK
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await waitForStream(stream.stream);
 
         const audioResource = createAudioResource(stream.stream, {
             inputType: 'webm/opus',
